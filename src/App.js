@@ -15,7 +15,6 @@ function App() {
     copiedTitleArr[ idx ].count = count + 1;
     titleState( copiedTitleArr );
   }
-  let propsIdx = undefined;
   return (
     <div className="App">
       <div className='black-nav'><h3>This is blog page.</h3></div>
@@ -51,7 +50,7 @@ function App() {
         // 부모에 있는 state를 자식 ele에 전하기 위해 props를 이용한다.
         // state는 부모 -> 자식으로만 전송가능 역순으로는 불가능
         // color처럼 parameter형태로 데이터 전송 가능 함수도 전송가능
-        modal && <Modal AppState={ title } TargetState={ target } color="yellow" targetIdx={ propsIdx }/>
+        modal && <Modal AppState={ title } TargetState={ target } color="yellow"/>
       }
     </div>
   );
