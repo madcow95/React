@@ -19,7 +19,6 @@ function App() {
     <div className="App">
       <div className='black-nav'><h3>This is blog page.</h3></div>
 
-      {/* 같은 html 반복문(for, forEach가 사용이 안됨) 오히려 좋다 */}
       {
         title.map( ( ele, idx ) => {
           return (
@@ -40,17 +39,12 @@ function App() {
       <button onClick={ () => {
         const copiedTitle = [ ...title ];
         copiedTitle.sort( ( a, b ) => {
-          return a.localeCompare( b );
+          return a.title.localeCompare( b.title );
         } );
         titleState( copiedTitle );
       }}>Sort Title</button>
-      {/* 홀리 쉿 개멋있어 */}
       {
-        // if 대용 3항연산자 주로 사용
-        // 부모에 있는 state를 자식 ele에 전하기 위해 props를 이용한다.
-        // state는 부모 -> 자식으로만 전송가능 역순으로는 불가능
-        // color처럼 parameter형태로 데이터 전송 가능 함수도 전송가능
-        modal && <Modal AppState={ title } TargetState={ target } color="yellow"/>
+        modal && <Modal AppState={ title } TargetState={ target }/>
       }
     </div>
   );
@@ -59,7 +53,7 @@ function App() {
 const Modal = ( parentState ) => {
   let targetIdx = parentState.TargetState;
   return (
-    <div className="modal" style={ { background : parentState.color } }>
+    <div className="modal">
       <h4>제목 : { parentState.AppState[ targetIdx ].title }</h4>
       <p>날짜 : { parentState.AppState[ targetIdx ].desc }</p>
       <p>좋아요 : { parentState.AppState[ targetIdx ].count }</p>
