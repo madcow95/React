@@ -8,6 +8,7 @@ function App() {
                                           { count : 0, title : "게임 추천", desc: "11월 23일" } ] );
   let [ modal, setModal ] = useState( false );
   let [ target, setTarget ] = useState( undefined );
+  let [ inputValue, setInputValue ] = useState( "" );
 
   const firstdata = "블로그 제목 테스트 123";
   const likeUpdate = ( count, idx ) => {
@@ -23,29 +24,41 @@ function App() {
         title.map( ( ele, idx ) => {
           return (
             <div className='list' key = { idx } onClick={ () => { setTarget( idx ) } }>
-              <h4 onClick={ () => { setModal( !modal ) } }>{ ele.title }</h4>
-              <span onClick={ () => likeUpdate( ele.count, idx ) } style={ { cursor: "pointer" } }>👍 { ele.count }</span>
+              <h4 onClick={ () => { setModal( true ) } }>{ ele.title }
+                <span onClick={ ( e ) => { likeUpdate( ele.count, idx ); e.stopPropagation() } } style={ { cursor: "pointer" } }>👍 { ele.count }</span>
+                <button onClick={ ( e ) => {
+                  e.stopPropagation();
+                  let copiedTitleArr = [ ...title ];
+                  if( idx === 0 ) {
+                    copiedTitleArr.splice( idx, idx + 1 );
+                  } else {
+                    copiedTitleArr.splice( idx, idx );
+                  }
+                  titleState( copiedTitleArr );
+                } }>삭제</button>
+              </h4>
               <p>{ ele.desc }</p>
             </div>
           )
         } )
       }
       <h4 style={ {color : "red", fontSize : "40px"} }>{ firstdata }</h4>
-      <button onClick={ () => { 
-        const copiedTitle = [ ...title ];
-        copiedTitle[0].title = "음악 추천";
-        titleState( copiedTitle );
-      } }>Change Title</button>
+      <input type="text" onChange={ ( e ) => { setInputValue( e.target.value ); } }/>
       <button onClick={ () => {
-        const copiedTitle = [ ...title ];
-        copiedTitle.sort( ( a, b ) => {
-          return a.title.localeCompare( b.title );
-        } );
-        titleState( copiedTitle );
-      }}>Sort Title</button>
-      {
-        modal && <Modal AppState={ title } TargetState={ target }/>
-      }
+        const copiedTitleArr = [ ...title ];
+        const enteredTitle = inputValue;
+        const dateStr = "11월 19일";
+        copiedTitleArr.push(
+          {
+            title : enteredTitle,
+            desc : dateStr,
+            count : 0
+          }
+        );
+        titleState( copiedTitleArr );
+      } }>글 추가</button>
+      { inputValue.length < 4 && <LengthCheckP/> }
+      { modal && <Modal AppState={ title } TargetState={ target }/> }
     </div>
   );
 }
@@ -58,6 +71,12 @@ const Modal = ( parentState ) => {
       <p>날짜 : { parentState.AppState[ targetIdx ].desc }</p>
       <p>좋아요 : { parentState.AppState[ targetIdx ].count }</p>
     </div>
+  )
+}
+
+const LengthCheckP = () => {
+  return (
+    <p style={ { fontSize: "10px", color: "red" } }>4글자 이상 입력해주세요.</p>
   )
 }
 export default App;
